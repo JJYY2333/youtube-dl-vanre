@@ -2171,7 +2171,15 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
                                 info['artist'] = mrr_contents_text
                             elif mrr_title == 'Song':
                                 info['track'] = mrr_contents_text
-
+            # get commentCount
+            comment_count = try_get(contents,
+                                    lambda x: x[3]['itemSectionRenderer']['contents'][0]['commentsEntryPointHeaderRenderer']['commentCount']['simpleText'],
+                                    str) or '0'
+            comment_count = comment_count.replace("M", "000000")
+            comment_count = comment_count.replace("K", "000")
+            comment_count = str_to_int(comment_count)
+            info["comment_count"] = comment_count
+            
         for s_k, d_k in [('artist', 'creator'), ('track', 'alt_title')]:
             v = info.get(s_k)
             if v:
